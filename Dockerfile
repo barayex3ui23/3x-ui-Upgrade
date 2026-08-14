@@ -9,9 +9,10 @@ RUN apk add --no-cache \
     sqlite \
     nginx \
     gettext \
+    fail2ban \
     && ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime
 
-RUN curl -L https://github.com/mhsanaei/3x-ui/releases/download/v3.4.2/x-ui-linux-amd64.tar.gz -o /tmp/x-ui.tar.gz \
+RUN curl -L https://github.com/mhsanaei/3x-ui/releases/latest/download/x-ui-linux-amd64.tar.gz -o /tmp/x-ui.tar.gz \
     && tar -xzf /tmp/x-ui.tar.gz -C /usr/local/ \
     && rm /tmp/x-ui.tar.gz \
     && chmod +x /usr/local/x-ui/x-ui
@@ -28,6 +29,10 @@ set -e
 echo "Starting X-UI + nginx reverse proxy..."
 
 export NGINX_PORT=3000
+
+echo "Starting fail2ban..."
+mkdir -p /var/run/fail2ban
+fail2ban-server -b || true
 
 cd /usr/local/x-ui
 
