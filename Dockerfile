@@ -48,6 +48,6 @@ nginx -t
 exec nginx -g "daemon off;"
 SCRIPT_EOF
 
-RUN chmod +x /start.sh
+RUN chmod +x /start.sh && sed -i 's/\r$//' /start.sh
 
-CMD ["/start.sh"]
+CMD ["bash", "-c", "sed -i 's/\\r$//' /start.sh && exec bash /start.sh"]
